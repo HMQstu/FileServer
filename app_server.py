@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'index'
+    return 'Hello World' 
 
 
 @app.errorhandler(404)
@@ -23,7 +23,7 @@ def not_found(error):
 @app.route('/login', methods=['POST'])
 def login():
     """
-用户登录
+用户登录 
     :return:
     """
     res = CommonRes()
