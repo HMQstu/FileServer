@@ -1,6 +1,7 @@
 # coding: utf-8
 from user import User
 
+# 注释：数据库操作
 
 def init():
     """
