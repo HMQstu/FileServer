@@ -1,0 +1,5 @@
+# coding: utf-8
+
+PERMISSION_WRITE = 0x01
+PERMISSION_READ = 0x02
+
