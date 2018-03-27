@@ -2,20 +2,21 @@
 from user import User
 import mysql.connector
 
-
-# 注释：数据库操作
-
 connection = None
+cursor = None
+
 
 def init():
     global connection
     connection = mysql.connector.connect(user='root', password='root', database='file_server_db', use_unicode=True)
-    return
+    global cursor
+    cursor = connection.cursor()
+    check_create()
 
 
 def check_create():
     sql = '''
-        create table if not exists user(
+        create table if not exists `user`(
             id bigint primary key auto_increment,
             username varchar(255),
             password varchar(255),
@@ -24,31 +25,43 @@ def check_create():
             phone varchar(15)
         );
     '''
-    pass
+    global cursor
+    cursor.execute(sql)
 
 
 def dispose():
-    pass
+    if cursor is not None:
+        cursor.close()
+    if connection is not None:
+        connection.close()
 
 
 def find_user_by_username(username):
-    # SQL语句
-    sql = 'select username,password,role,mail,phone from user where username=%s' % username
-    # 执行SQL
-    # 填充User
-    u = User()
-    # 返回User
+    sql = "select username,password,role,mail,phone from `user` where username='%s'" % username
+    global cursor
+    cursor.execute(sql)
+    values = cursor.fetchall()
+    for username, password, role, mail, phone in values:
+        u = User()
+        u.username = username
+        u.password = password
+        u.role = role
+        u.mail = mail
+        u.phone = phone
+        return u
     return None
 
 
 def insert_user(user):
-    # 执行插入语句
-    sql = "insert into user(id,username,password,role,mail,phone) values(0,'%s','%s',%d,'%s','%s')" \
-            % user.username, user.password,user.role,user.mail,user.phone
-    pass
+    sql = "insert into `user`(id,username,password,role,mail,phone) values(0,'%s','%s',%d,'%s','%s')" \
+          % (user.username, user.password, user.role, user.mail, user.phone)
+    global cursor
+    cursor.execute(sql)
+    connection.commit()
 
 
 def remove_user_by_username(username):
-    # 执行删除语句
-    sql = 'delete from user where username = %s' % username
-    pass
+    sql = 'delete from `user` where username = %s' % username
+    global cursor
+    cursor.execute(sql)
+    connection.commit()
