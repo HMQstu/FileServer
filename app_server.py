@@ -6,6 +6,7 @@ import user_service
 import file_service
 from common_res import CommonRes
 from user import User
+import json_utils
 
 app = Flask(__name__)
 
@@ -18,10 +19,11 @@ def upload():
     if result is not None:
         res.code = 0
         res.message = 'success'
+        res.data = result
     else:
         res.code = -1
         res.message = 'error'
-    return res.to_res()
+    return json_utils.to_json_res(res)
 
 
 @app.route('/')
@@ -46,17 +48,16 @@ def login():
     if username is None or password is None:
         res.code = -1
         res.message = 'invalid params'
-        return res.to_res()
+        return json_utils.to_json_res(res)
     user = user_service.query_user(username, password)
     if user is None:
         res.code = -2
         res.message = 'username or password not correct'
-        return res.to_res()
-    # user 不为 None，即登录成功
+        return json_utils.to_json_res(res)
     res.code = 0
     res.message = 'success'
     res.data = user
-    return res.to_res()
+    return json_utils.to_json_res(res)
 
 
 @app.route('/register', methods=['POST'])
