@@ -1,4 +1,5 @@
 # coding: utf-8
+from file_info import FileInfo
 from user import User
 import mysql.connector
 
@@ -62,6 +63,25 @@ def insert_user(user):
 
 def remove_user_by_username(username):
     sql = 'delete from `user` where username = %s' % username
+    global cursor
+    cursor.execute(sql)
+    connection.commit()
+
+
+def query_all_files():
+    sql = ''
+    global cursor
+    cursor.execute(sql)
+    values = cursor.fetchall()
+    result = []
+    for x in values:
+        f = FileInfo()
+        result.append(f)
+    return result
+
+
+def insert_file_info(file_info):
+    sql = ''
     global cursor
     cursor.execute(sql)
     connection.commit()
