@@ -66,9 +66,27 @@ def register():
 用户注册
     :return:
     """
+    res = CommonRes()
+    username = request.form['username']
+    password = request.form['password']
+    role = request.form['role']
+    mail = request.form['mail']
+    phone = request.form['phone']
     u = User()
+    u.username = username
+    u.password = password
+    #u.role = role
+    u.mail = mail
+    u.phone = phone
+    if username is None or password is None or role is None:
+        res.code = -1
+        res.message = 'invalid params'
+        return json_utils.to_json_res(res)
     user_service.register_user(u)
-    return ''
+    res.code = 0
+    res.message = 'success'
+    res.data = u
+    return json_utils.to_json_res(res)
 
 
 if __name__ == '__main__':
