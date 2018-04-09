@@ -106,3 +106,29 @@ def insert_file_info(file_info):
     global cursor
     cursor.execute(sql)
     connection.commit()
+
+
+def find_file_by_id(file_id):
+    sql = "select id,file_name,file_size,creator,file_path,file_doc,permission,download_count from `files` where id=%d" \
+          % file_id
+    global cursor
+    cursor.execute(sql)
+    values = cursor.fetchall()
+    for file_id, file_name, file_size, creator, file_path, file_doc, permission, download_count in values:
+        f = FileInfo()
+        f.file_id = file_id
+        f.file_name = file_name
+        f.file_size = file_size
+        f.creator = creator
+        f.file_path = file_path
+        f.file_doc = file_doc
+        f.permission = permission
+        f.download_count = download_count
+        return f
+
+
+def drop_file_by_id(file_id):
+    sql = "delete from `files` where id=%d " % file_id
+    global cursor
+    cursor.execute(sql)
+    connection.commit()

@@ -13,6 +13,30 @@ import simple_file_info
 app = Flask(__name__)
 
 
+@app.route('/delete', methods=['GET', 'POST'])
+def delete_file():
+    """
+删除文件，传参: id 文件id号 int
+    :return:
+    """
+    res = CommonRes()
+    if 'user' not in session:
+        res.code = -3
+        res.message = 'no user login'
+        return json_utils.to_json_res(res)
+    user_dict = session['user']
+    role = int(user_dict['role'])
+    file_id = int(request.values['id'])
+    result = file_service.drop_file(file_id, role)
+    if result:
+        res.code = 0
+        res.message = 'success'
+    else:
+        res.code = -3
+        res.message = 'permission denied'
+    return json_utils.to_json_res(res)
+
+
 @app.route('/files', methods=['GET'])
 def files():
     res = CommonRes()

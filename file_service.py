@@ -6,6 +6,16 @@ from file_info import FileInfo
 import os
 
 
+def drop_file(file_id, role):
+    file_info = db_helper.find_file_by_id(file_id)
+    permission_code = file_info.permission
+    has_permission = permission_manager.has_permission(permission_code, role, permission_manager.PERMISSION_DELETE)
+    if not has_permission:
+        return False
+    db_helper.drop_file_by_id(file_id)
+    return True
+
+
 def visible_files_list(role):
     all_files = db_helper.query_all_files()
     result = []
