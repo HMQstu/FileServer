@@ -28,12 +28,15 @@ def delete_file():
     role = int(user_dict['role'])
     file_id = int(request.values['id'])
     result = file_service.drop_file(file_id, role)
-    if result:
+    if result == 0:
         res.code = 0
         res.message = 'success'
-    else:
+    elif result == -3:
         res.code = -3
         res.message = 'permission denied'
+    else:
+        res.code = -1
+        res.message = 'no such file'
     return json_utils.to_json_res(res)
 
 
@@ -124,7 +127,7 @@ def register():
     mail = request.form['mail']
     phone = request.form['phone']
 
-    if username is None or password is None or role is None:
+    if username == '' or password == '' or role == '':
         res.code = -1
         res.message = 'invalid params'
         return json_utils.to_json_res(res)
