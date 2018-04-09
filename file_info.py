@@ -8,6 +8,7 @@ class FileInfo:
         self.file_name = ''
         self.file_size = 0
         self.creator = ''
+        self.created_at = 0
         self.file_path = ''
         self.file_doc = ''
         self.permission = 0x00

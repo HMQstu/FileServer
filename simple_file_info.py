@@ -9,6 +9,7 @@ def parse(file_info, role):
     info.file_name = file_info.file_name
     info.file_size = file_info.file_size
     info.creator = file_info.creator
+    info.created_at = file_info.created_at
     info.file_doc = file_info.file_doc
     info.download_count = file_info.download_count
     code = file_info.permission
@@ -25,6 +26,7 @@ class SimpleFileInfo:
         self.file_name = ''
         self.file_size = 0
         self.creator = ''
+        self.created_at = 0
         self.file_doc = ''
         self.download_count = 0
         self.can_see = True
