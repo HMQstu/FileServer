@@ -30,7 +30,7 @@ def visible_files_list(role):
     return result
 
 
-UPLOAD_FOLDER = 'F:\humengqiu\workpace\FileServer'
+UPLOAD_FOLDER = 'F:\\humengqiu\\workpace\\FileServer'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'ppt', 'pptx'}
 
 
