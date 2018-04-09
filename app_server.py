@@ -12,6 +12,21 @@ import permission_manager
 app = Flask(__name__)
 
 
+@app.route('/files', methods=['GET'])
+def files():
+    res = CommonRes()
+    if 'user' not in session:
+        res.code = -3
+        res.message = 'no user login'
+        return json_utils.to_json_res(res)
+    user_dict = session['user']
+    files_list = file_service.visible_files_list(int(user_dict['role']))
+    res.code = 0
+    res.message = 'success'
+    res.data = files_list
+    return json_utils.to_json_res(res)
+
+
 @app.route('/upload', methods=['POST'])
 def upload():
     res = CommonRes()

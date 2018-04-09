@@ -4,6 +4,7 @@
 class FileInfo:
 
     def __init__(self):
+        self.file_id = 0
         self.file_name = ''
         self.file_size = 0
         self.creator = ''
