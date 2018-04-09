@@ -1,21 +1,27 @@
 # coding: utf-8
 
-from flask import Flask, request
+from flask import Flask, request, session
 import db_helper
 import user_service
 import file_service
 from common_res import CommonRes
 from user import User
 import json_utils
+import permission_manager
 
 app = Flask(__name__)
 
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    file_io = request.files['file']
-    result = file_service.insert_new_file(file_io, None, None)
     res = CommonRes()
+    if 'user' not in session:
+        res.code = -3
+        res.message = 'no user login'
+        return json_utils.to_json_res(res)
+    user_dict = session['user']
+    file_io = request.files['file']
+    result = file_service.insert_new_file(file_io, user_dict['username'], permission_manager.NORMAL_FILE_PERMISSION)
     if result is not None:
         res.code = 0
         res.message = 'success'
@@ -28,7 +34,7 @@ def upload():
 
 @app.route('/')
 def index():
-    return 'Hello World'
+    return session['user']['username']
 
 
 @app.errorhandler(404)
@@ -54,6 +60,7 @@ def login():
         res.code = -2
         res.message = 'username or password not correct'
         return json_utils.to_json_res(res)
+    session['user'] = user.__dict__
     res.code = 0
     res.message = 'success'
     res.data = user
@@ -69,23 +76,50 @@ def register():
     res = CommonRes()
     username = request.form['username']
     password = request.form['password']
+    # role 取值：normal 普通, leader 领导, admin 管理员
     role = request.form['role']
     mail = request.form['mail']
     phone = request.form['phone']
-    u = User()
-    u.username = username
-    u.password = password
-    #u.role = role
-    u.mail = mail
-    u.phone = phone
+
     if username is None or password is None or role is None:
         res.code = -1
         res.message = 'invalid params'
         return json_utils.to_json_res(res)
+
+    u = User()
+    u.username = username
+    u.password = password
+    if 'admin' == role:
+        u.role = permission_manager.ROLE_ADMIN
+    elif 'leader' == role:
+        u.role = permission_manager.ROLE_LEADER
+    else:
+        u.role = permission_manager.ROLE_NORMAL
+    u.mail = mail
+    u.phone = phone
+
     user_service.register_user(u)
     res.code = 0
     res.message = 'success'
     res.data = u
+    return json_utils.to_json_res(res)
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    """
+注销用户
+    :return:
+    """
+    res = CommonRes()
+    res.code = -3
+    res.message = 'no user login'
+    if 'user' in session:
+        old_user = session['user']
+        session.pop('user', None)
+        res.code = 0
+        res.message = 'success'
+        res.data = old_user
     return json_utils.to_json_res(res)
 
 
