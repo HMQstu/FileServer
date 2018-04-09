@@ -8,6 +8,7 @@ from common_res import CommonRes
 from user import User
 import json_utils
 import permission_manager
+import simple_file_info
 
 app = Flask(__name__)
 
@@ -20,10 +21,13 @@ def files():
         res.message = 'no user login'
         return json_utils.to_json_res(res)
     user_dict = session['user']
-    files_list = file_service.visible_files_list(int(user_dict['role']))
+    role = int(user_dict['role'])
+    files_list = file_service.visible_files_list(role)
+    result = [simple_file_info.parse(x, role) for x in files_list]
+
     res.code = 0
     res.message = 'success'
-    res.data = files_list
+    res.data = result
     return json_utils.to_json_res(res)
 
 
