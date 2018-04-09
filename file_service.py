@@ -9,12 +9,14 @@ import time
 
 def drop_file(file_id, role):
     file_info = db_helper.find_file_by_id(file_id)
+    if file_info is None:
+        return -1
     permission_code = file_info.permission
     has_permission = permission_manager.has_permission(permission_code, role, permission_manager.PERMISSION_DELETE)
     if not has_permission:
-        return False
+        return -3
     db_helper.drop_file_by_id(file_id)
-    return True
+    return 0
 
 
 def visible_files_list(role):
@@ -28,7 +30,7 @@ def visible_files_list(role):
     return result
 
 
-UPLOAD_FOLDER = '/Users/wuhaojie/WorkSpace/Python/FileServer'
+UPLOAD_FOLDER = 'F:\humengqiu\workpace\FileServer'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'ppt', 'pptx'}
 
 

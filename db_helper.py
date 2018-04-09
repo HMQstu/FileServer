@@ -97,7 +97,7 @@ def query_all_files():
         f.created_at = created_at
         f.file_path = file_path
         f.file_doc = file_doc
-        f.permission = permission
+        f.permission = int(permission)
         f.download_count = download_count
         result.append(f)
     return result
@@ -128,7 +128,7 @@ def find_file_by_id(file_id):
         f.created_at = created_at
         f.file_path = file_path
         f.file_doc = file_doc
-        f.permission = permission
+        f.permission = int(permission)
         f.download_count = download_count
         return f
 
