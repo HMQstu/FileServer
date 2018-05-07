@@ -10,8 +10,27 @@ import simple_file_info
 import user_service
 from common_res import CommonRes
 from user import User
+import search_service
 
 app = Flask(__name__)
+
+
+@app.route('/query', methods=['GET', 'POST'])
+def query_files():
+    res = CommonRes()
+    if 'user' not in session:
+        res.code = -3
+        res.message = 'no user login'
+        return json_utils.to_json_res(res)
+    user_dict = session['user']
+    role = int(user_dict['role'])
+    key_word = request.values['key']
+    result = search_service.query_files(role, key_word)
+
+    res.code = 0
+    res.message = 'success'
+    res.data = result
+    return json_utils.to_json_res(res)
 
 
 @app.route('/download', methods=['GET'])

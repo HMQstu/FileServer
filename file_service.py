@@ -5,6 +5,7 @@ import permission_manager
 from file_info import FileInfo
 import os
 import time
+import search_service
 
 
 def provide_file(file_id, role):
@@ -67,6 +68,7 @@ def insert_new_file(file_io, user_name, file_permission):
     file_info.file_path = save_path
     file_info.file_size = os.path.getsize(save_path)
     file_info.created_at = time.time() * 1000
+    file_info.key_words = search_service.cal_keys_from_file(file_info)
 
     db_helper.insert_file_info(file_info)
     return file_info

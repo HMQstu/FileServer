@@ -31,6 +31,7 @@ def check_create():
             id bigint primary key auto_increment,
             file_name varchar(255),
             file_size bigint,
+            key_words varchar(1024),
             creator varchar(255),
             created_at bigint,
             file_path varchar(255),
@@ -83,16 +84,18 @@ def remove_user_by_username(username):
 
 
 def query_all_files():
-    sql = "select id,file_name,file_size,creator,created_at,file_path,file_doc,permission,download_count from `files`"
+    sql = "select id,file_name,file_size,key_words,creator,created_at,file_path,file_doc,permission,download_count " \
+          "from `files`"
     global cursor
     cursor.execute(sql)
     values = cursor.fetchall()
     result = []
-    for file_id, file_name, file_size, creator, created_at, file_path, file_doc, permission, download_count in values:
+    for file_id, file_name, file_size, key_words, creator, created_at, file_path, file_doc, permission, download_count in values:
         f = FileInfo()
         f.file_id = file_id
         f.file_name = file_name
         f.file_size = file_size
+        f.key_words = key_words
         f.creator = creator
         f.created_at = created_at
         f.file_path = file_path
@@ -104,9 +107,11 @@ def query_all_files():
 
 
 def insert_file_info(file_info):
-    sql = "insert into `files`(id,file_name,file_size,creator,created_at,file_path,file_doc,permission,download_count) " \
-          "values(0, '%s', %d, '%s', %d, '%s', '%s', %d, %d)" \
-          % (file_info.file_name, file_info.file_size, file_info.creator, file_info.created_at, file_info.file_path,
+    sql = "insert into `files`(id,file_name,file_size,key_words," \
+          "creator,created_at,file_path,file_doc,permission,download_count) " \
+          "values(0, '%s', %d, '%s', '%s', %d, '%s', '%s', %d, %d)" \
+          % (file_info.file_name, file_info.file_size, file_info.key_words,
+             file_info.creator, file_info.created_at, file_info.file_path,
              file_info.file_doc, file_info.permission, file_info.download_count)
     global cursor
     cursor.execute(sql)
@@ -114,16 +119,17 @@ def insert_file_info(file_info):
 
 
 def find_file_by_id(file_id):
-    sql = "select id,file_name,file_size,creator,created_at,file_path,file_doc,permission,download_count " \
+    sql = "select id,file_name,file_size,key_words,creator,created_at,file_path,file_doc,permission,download_count " \
           "from `files` where id=%d" % file_id
     global cursor
     cursor.execute(sql)
     values = cursor.fetchall()
-    for file_id, file_name, file_size, creator, created_at, file_path, file_doc, permission, download_count in values:
+    for file_id, file_name, file_size, key_words, creator, created_at, file_path, file_doc, permission, download_count in values:
         f = FileInfo()
         f.file_id = file_id
         f.file_name = file_name
         f.file_size = file_size
+        f.key_words = key_words
         f.creator = creator
         f.created_at = created_at
         f.file_path = file_path

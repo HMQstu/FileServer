@@ -32,3 +32,4 @@ class SimpleFileInfo:
         self.can_see = True
         self.can_download = True
         self.can_delete = False
+        self.sort = 0

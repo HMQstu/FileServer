@@ -7,6 +7,7 @@ class FileInfo:
         self.file_id = 0
         self.file_name = ''
         self.file_size = 0
+        self.key_words = ''
         self.creator = ''
         self.created_at = 0
         self.file_path = ''
