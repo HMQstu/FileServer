@@ -1,16 +1,34 @@
 # coding: utf-8
 
-from flask import Flask, request, session
+from flask import Flask, request, session, Response, send_file
+
 import db_helper
-import user_service
 import file_service
-from common_res import CommonRes
-from user import User
 import json_utils
 import permission_manager
 import simple_file_info
+import user_service
+from common_res import CommonRes
+from user import User
 
 app = Flask(__name__)
+
+
+@app.route('/download', methods=['GET'])
+def download_file():
+    response = Response()
+    if 'user' not in session:
+        response.status_code = 401
+        return response
+    user_dict = session['user']
+    role = int(user_dict['role'])
+    file_id = int(request.values['id'])
+    result = file_service.provide_file(file_id, role)
+    if result is None:
+        response.status_code = 404
+        return response
+    path = result.file_path.encode('utf8')
+    return send_file(path, as_attachment=True, attachment_filename=result.file_name.encode('utf8'))
 
 
 @app.route('/delete', methods=['GET', 'POST'])
@@ -88,7 +106,7 @@ def not_found(error):
     return 'error', 404
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     """
 用户登录  
