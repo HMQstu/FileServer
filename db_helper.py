@@ -118,6 +118,20 @@ def insert_file_info(file_info):
     connection.commit()
 
 
+def update_file_by_id(file_id, new_file_info):
+    sql = "update files set file_name='%s',file_size=%d,key_words='%s'," \
+          "creator='%s',created_at=%d,file_path='%s'," \
+          "file_doc='%s',permission=%d,download_count=%d " \
+          "where id=%d" \
+          % (new_file_info.file_name, new_file_info.file_size, new_file_info.key_words,
+             new_file_info.creator, new_file_info.created_at, new_file_info.file_path,
+             new_file_info.file_doc, new_file_info.permission, new_file_info.download_count,
+             file_id)
+    global cursor
+    cursor.execute(sql)
+    connection.commit()
+
+
 def find_file_by_id(file_id):
     sql = "select id,file_name,file_size,key_words,creator,created_at,file_path,file_doc,permission,download_count " \
           "from `files` where id=%d" % file_id

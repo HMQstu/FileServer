@@ -6,6 +6,7 @@ from file_info import FileInfo
 import os
 import time
 import search_service
+import statistic_service
 
 
 def provide_file(file_id, role):
@@ -18,6 +19,7 @@ def provide_file(file_id, role):
         return None
     if not os.path.exists(file_info.file_path.encode('utf8')):
         return None
+    statistic_service.download_count_add(file_id)
     return file_info
 
 
