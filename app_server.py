@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from flask import Flask, request, session, Response, send_file
-
+from flask_cors import *
 import db_helper
 import file_service
 import json_utils
@@ -13,6 +13,7 @@ from user import User
 import search_service
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True)
 
 
 @app.route('/query', methods=['GET', 'POST'])
