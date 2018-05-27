@@ -105,7 +105,9 @@ def upload():
         return json_utils.to_json_res(res)
     user_dict = session['user']
     file_io = request.files['file']
-    result = file_service.insert_new_file(file_io, user_dict['username'], permission_manager.NORMAL_FILE_PERMISSION)
+    files_permission = int(str(request.form['permission']))
+    text = request.form['text']
+    result = file_service.insert_new_file(file_io, user_dict['username'], files_permission)
     if result is not None:
         res.code = 0
         res.message = 'success'
