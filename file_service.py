@@ -46,8 +46,8 @@ def visible_files_list(role):
     return result
 
 
-UPLOAD_FOLDER = '/Users/wuhaojie/WorkSpace/Python/FileServer'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'ppt', 'pptx'}
+UPLOAD_FOLDER = '/home/file_server_files'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'zip', 'rar'}
 
 
 def allowed_file(filename):
