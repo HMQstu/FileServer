@@ -21,9 +21,10 @@ def query_files(role, query):
 
         simple_info = simple_file_info.parse(file_info, role)
         simple_info.sort = count
-        result.append(simple_info)
+        if count > 0:
+            result.append(simple_info)
     result = sorted(result, key=lambda x: x.sort, reverse=True)
-    return result[:5]
+    return result[:3]
 
 
 def __cut_for_search(src):
