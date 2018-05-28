@@ -102,7 +102,7 @@ def files():
     user_dict = session['user']
     role = int(user_dict['role'])
     files_list = file_service.visible_files_list(role)
-    result = [simple_file_info.parse(x, role) for x in files_list]
+    result = [simple_file_info.parse(x, role, user_dict['username']) for x in files_list]
 
     res.code = 0
     res.message = 'success'
