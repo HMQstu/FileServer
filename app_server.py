@@ -12,6 +12,11 @@ from common_res import CommonRes
 from user import User
 import search_service
 
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -37,6 +42,10 @@ def query_files():
 @app.route('/download', methods=['GET'])
 def download_file():
     response = Response()
+    response.headers['Access-Control-Allow-Origin'] = 'http://39.108.50.100'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
     if 'user' not in session:
         response.status_code = 401
         return response
@@ -48,7 +57,12 @@ def download_file():
         response.status_code = 404
         return response
     path = result.file_path.encode('utf8')
-    return send_file(path, as_attachment=True, attachment_filename=result.file_name.encode('utf8'))
+    response = send_file(path, as_attachment=True, attachment_filename=unicode(result.file_name.encode('utf8')))
+    response.headers['Access-Control-Allow-Origin'] = 'http://39.108.50.100'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
 
 
 @app.route('/delete', methods=['GET', 'POST'])
